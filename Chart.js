@@ -1173,6 +1173,14 @@
 
 				ctx.fill();
 				ctx.stroke();
+
+				if (this.label != null && this.showLabels) {
+					ctx.font = fontString(this.fontSize,this.fontStyle,this.fontFamily);
+					ctx.textAlign = 'center';
+					ctx.textBaseline = "middle";
+					ctx.fillStyle = this.fontColor;
+					ctx.fillText(this.label, x, y);
+				}
 			}
 
 
@@ -3211,7 +3219,10 @@
 			legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
 
 			//If true, draw dots outside of lines
-			pointOutward : false
+			pointOutward : false,
+
+			//If true, show point labels
+			showPointLabels: false
 		},
 
 		initialize: function(data){
@@ -3221,7 +3232,12 @@
 				display: this.options.pointDot,
 				hitDetectionRadius : this.options.pointHitDetectionRadius,
 				ctx : this.chart.ctx,
-				outward : this.options.pointOutward
+				outward : this.options.pointOutward,
+				showLabels : this.options.showPointLabels,
+				fontColor : this.options.pointLabelFontColor,
+				fontSize : this.options.pointLabelFontSize,
+				fontFamily : this.options.pointLabelFontFamily,
+				fontStyle : this.options.pointLabelFontStyle,
 			});
 
 			this.datasets = [];
@@ -3265,6 +3281,9 @@
 					if (!this.scale.animation){
 						pointPosition = this.scale.getPointPosition(index, this.scale.calculateCenterOffset(dataPoint));
 					}
+
+					var label = data.labels[index];
+
 					datasetObject.points.push(new this.PointClass({
 						value : dataPoint,
 						label : data.labels[index],
@@ -3274,7 +3293,8 @@
 						strokeColor : dataset.pointStrokeColor,
 						fillColor : dataset.pointColor,
 						highlightFill : dataset.pointHighlightFill || dataset.pointColor,
-						highlightStroke : dataset.pointHighlightStroke || dataset.pointStrokeColor
+						highlightStroke : dataset.pointHighlightStroke || dataset.pointStrokeColor,
+						label : label
 					}));
 				},this);
 

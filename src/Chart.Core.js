@@ -1173,6 +1173,14 @@
 
 				ctx.fill();
 				ctx.stroke();
+
+				if (this.label != null && this.showLabels) {
+					ctx.font = fontString(this.fontSize,this.fontStyle,this.fontFamily);
+					ctx.textAlign = 'center';
+					ctx.textBaseline = "middle";
+					ctx.fillStyle = this.fontColor;
+					ctx.fillText(this.label, x, y);
+				}
 			}
 
 
