@@ -1146,12 +1146,24 @@
 			var hitDetectionRange = this.hitDetectionRadius + this.radius;
 			return ((Math.pow(chartX-this.x, 2)+Math.pow(chartY-this.y, 2)) < Math.pow(hitDetectionRange,2));
 		},
-		draw : function(){
+		draw : function(chart){
+			chart = chart || {};
 			if (this.display){
 				var ctx = this.ctx;
 				ctx.beginPath();
 
-				ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
+				var x = this.x;
+				var y = this.y;
+
+				if (this.outward) {
+					var dy = (chart.height / 2 - y);
+					var dx = (chart.width / 2 - x);
+					var angle = Math.atan2(dy, dx);
+					x -= this.radius * Math.cos(angle);
+					y -= this.radius * Math.sin(angle);
+				}
+
+				ctx.arc(x, y, this.radius, 0, Math.PI*2);
 				ctx.closePath();
 
 				ctx.strokeStyle = this.strokeColor;

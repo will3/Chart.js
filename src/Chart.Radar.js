@@ -62,8 +62,10 @@
 			datasetFill : true,
 
 			//String - A legend template
-			legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+			legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
 
+			//If true, draw dots outside of lines
+			pointOutward : false
 		},
 
 		initialize: function(data){
@@ -72,7 +74,8 @@
 				radius : this.options.pointDotRadius,
 				display: this.options.pointDot,
 				hitDetectionRadius : this.options.pointHitDetectionRadius,
-				ctx : this.chart.ctx
+				ctx : this.chart.ctx,
+				outward : this.options.pointOutward
 			});
 
 			this.datasets = [];
@@ -326,9 +329,9 @@
 				//lagging behind the point positions
 				helpers.each(dataset.points,function(point){
 					if (point.hasValue()){
-						point.draw();
+						point.draw(this.chart);
 					}
-				});
+				},this);
 
 			},this);
 

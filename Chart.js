@@ -1146,12 +1146,24 @@
 			var hitDetectionRange = this.hitDetectionRadius + this.radius;
 			return ((Math.pow(chartX-this.x, 2)+Math.pow(chartY-this.y, 2)) < Math.pow(hitDetectionRange,2));
 		},
-		draw : function(){
+		draw : function(chart){
+			chart = chart || {};
 			if (this.display){
 				var ctx = this.ctx;
 				ctx.beginPath();
 
-				ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
+				var x = this.x;
+				var y = this.y;
+
+				if (this.outward) {
+					var dy = (chart.height / 2 - y);
+					var dx = (chart.width / 2 - x);
+					var angle = Math.atan2(dy, dx);
+					x -= this.radius * Math.cos(angle);
+					y -= this.radius * Math.sin(angle);
+				}
+
+				ctx.arc(x, y, this.radius, 0, Math.PI*2);
 				ctx.closePath();
 
 				ctx.strokeStyle = this.strokeColor;
@@ -3196,8 +3208,10 @@
 			datasetFill : true,
 
 			//String - A legend template
-			legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+			legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
 
+			//If true, draw dots outside of lines
+			pointOutward : false
 		},
 
 		initialize: function(data){
@@ -3206,7 +3220,8 @@
 				radius : this.options.pointDotRadius,
 				display: this.options.pointDot,
 				hitDetectionRadius : this.options.pointHitDetectionRadius,
-				ctx : this.chart.ctx
+				ctx : this.chart.ctx,
+				outward : this.options.pointOutward
 			});
 
 			this.datasets = [];
@@ -3460,9 +3475,9 @@
 				//lagging behind the point positions
 				helpers.each(dataset.points,function(point){
 					if (point.hasValue()){
-						point.draw();
+						point.draw(this.chart);
 					}
-				});
+				},this);
 
 			},this);
 
