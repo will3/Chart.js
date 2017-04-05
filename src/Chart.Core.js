@@ -1163,6 +1163,9 @@
 					y -= this.radius * Math.sin(angle);
 				}
 
+				this.actualX = x;
+				this.actualY = y;
+
 				ctx.arc(x, y, this.radius, 0, Math.PI*2);
 				ctx.closePath();
 
