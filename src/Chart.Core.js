@@ -2000,7 +2000,9 @@
 							ctx.textBaseline = 'top';
 						}
 
-						ctx.fillText(this.labels[i], pointLabelPosition.x, pointLabelPosition.y);
+						if (!this.hideAxisLabel) {
+							ctx.fillText(this.labels[i], pointLabelPosition.x, pointLabelPosition.y);	
+						}
 					}
 				}
 			}

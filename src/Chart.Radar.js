@@ -68,7 +68,10 @@
 			pointOutward : false,
 
 			//If true, show point labels
-			showPointLabels: false
+			showPointLabels: false,
+
+			//If true, hide axis label
+			hideAxisLabel: false
 		},
 
 		initialize: function(data){
@@ -204,7 +207,8 @@
 				ctx : this.chart.ctx,
 				templateString: this.options.scaleLabel,
 				labels: data.labels,
-				valuesCount: data.datasets[0].data.length
+				valuesCount: data.datasets[0].data.length,
+				hideAxisLabel: this.options.hideAxisLabel
 			});
 
 			this.scale.setScaleSize();
